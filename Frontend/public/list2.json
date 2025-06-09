@@ -1,0 +1,99 @@
+[
+    {
+        "id": 1,
+        "name": "Gourmet Bites Catering",
+        "title": "Where Every Bite is an Experience",
+        
+        "price": 2225555,
+        "image": "/cat1.jpg"
+    },
+    {
+        "id": 2,
+        "name": "Savory Sensations",
+        "title": "Bringing Flavors to Life",
+        
+        "price": 51555,
+        "image": "/cat2.jpg"
+    },
+    {
+        "id": 3,
+        "name": "Culinary Creations",
+        "title": "Crafting Memories Through Food",
+        
+        "price": 569855,
+        "image": "/cat3.jpg"
+    },
+    {
+        "id": 4,
+        "name": "Taste of Elegance",
+        "title": "Fine Dining, Redefined",
+        
+        "price": 51555,
+        "image": "/cat4.jpg"
+    },
+    {
+        "id": 5,
+        "name": "Flavors of the World",
+        "title": "Global Cuisines at Your Doorstep",
+        
+        "price": 51555,
+        "image": "/cat5.jpg"
+    },
+    {
+        "id": 6,
+        "name": "Elite Event Caterers",
+        "title": "Exquisite Catering for Extraordinary Events",
+        
+        "price": 51555,
+        "image": "/cat6.jpg"
+        
+    },
+    {
+        "id": 7,
+        "name": "Savor Street Catering",
+        "title": "Where Taste Meets Tradition",
+       
+        "price": 51555,
+        "image": "/cat4.jpg"
+    },
+    {
+        "id": 8,
+        "name": "The Chefs Table",
+        "title": "Artisanal Creations for Every Occasion",
+       
+        "price": 51555,
+        "image": "/cat3.jpg"
+    },
+    {
+        "id": 9,
+        "name": "Spice & Spoon Catering",
+        "title": "A Symphony of Spices in Every Dish",
+        
+        "price": 51555,
+        "image": "/cat5.jpg"
+    },
+    {
+        "id": 10,
+        "name": "Epicurean Affairs",
+        "title": "Indulge in Culinary Excellence",
+       
+        "price": 51555,
+        "image": "/cat2.jpg"
+    },
+    {
+        "id": 11,
+        "name": "Feast & Festivity ",
+        "title": "Celebrating Life with Food",
+        "price": 51555,
+        "image": "/cat6.jpg"
+    },
+    {
+        "id": 12,
+        "name": "Delightful Dishes Catering",
+        "title": "Turning Meals into Memories",
+       
+        "price": 51555,
+        "image": "/cat1.jpg"
+    }
+    
+]

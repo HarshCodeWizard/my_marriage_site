@@ -1,0 +1,99 @@
+[
+    {
+        "id": 1,
+        "name": "Elegance Events",
+        "title": "Transforming Spaces, Creating Memories",
+        
+        "price": 2225555,
+        "image": "/dec1.jpg"
+    },
+    {
+        "id": 2,
+        "name": "Dreamscape Designs",
+        "title": "Turning Dreams into Reality",
+        
+        "price": 51555,
+        "image": "/dec2.jpg"
+    },
+    {
+        "id": 3,
+        "name": "Blissful Blooms",
+        "title": "Where Every Detail Blossoms",
+        
+        "price": 569855,
+        "image": "/dec3.jpg"
+    },
+    {
+        "id": 4,
+        "name": "Enchanting Ambience",
+        "title": "Crafting Magical Moments",
+        
+        "price": 51555,
+        "image": "/dec4.jpg"
+    },
+    {
+        "id": 5,
+        "name": "The Grand Garnish",
+        "title": "Elevate Your Wedding to Grandness",
+        
+        "price": 51555,
+        "image": "/dec5.jpg"
+    },
+    {
+        "id": 6,
+        "name": "Divine Decor Studio",
+        "title": "Creating Divine Spaces for Your Special Day",
+        
+        "price": 51555,
+        "image": "/dec1.jpg"
+        
+    },
+    {
+        "id": 7,
+        "name": "Velvet Vows",
+        "title": "Soft Elegance for Every Celebration",
+       
+        "price": 51555,
+        "image": "/dec3.jpg"
+    },
+    {
+        "id": 8,
+        "name": "Opulent Occasions",
+        "title": "Luxury Decor for Unforgettable Events",
+       
+        "price": 51555,
+        "image": "/dec4.jpg"
+    },
+    {
+        "id": 9,
+        "name": "Serene Settings",
+        "title": "Creating Calm & Stunning Atmospheres",
+        
+        "price": 51555,
+        "image": "/dec5.jpg"
+    },
+    {
+        "id": 10,
+        "name": "Floral Finesse",
+        "title": "Artistry in Every Flower",
+       
+        "price": 51555,
+        "image": "/dec2.jpg"
+    },
+    {
+        "id": 11,
+        "name": "Radiant Revelry",
+        "title": "Illuminating Your Special Day",
+        "price": 51555,
+        "image": "/dec4.jpg"
+    },
+    {
+        "id": 12,
+        "name": "Mystique Moments",
+        "title": "Decorating with a Touch of Magic",
+        
+        "price": 51555,
+        "image": "/dec1.jpg"
+    }
+    
+]

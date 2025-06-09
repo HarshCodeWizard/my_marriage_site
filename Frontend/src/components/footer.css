@@ -1,0 +1,20 @@
+.firstcss{
+    height: auto;
+    width: auto;
+}
+.firstcss a{
+    margin: 10px;
+    padding: 0.2px;
+    
+
+   
+    
+    
+}
+.firstcss a i{
+    transform: translate(50%,50%);
+}
+
+h6{
+    font: size 20px;
+}

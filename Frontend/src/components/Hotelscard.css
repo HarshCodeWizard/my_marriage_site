@@ -1,0 +1,21 @@
+.Bigcard{
+    background-color: black;
+    color: white;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card{
+    font-weight: 90px;
+    font-size: 23px;
+    font: bold;
+}
+.spancard{
+    color: pink;
+    font-size: 19px;
+}
+    
+
+
+
