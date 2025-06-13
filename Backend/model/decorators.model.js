@@ -14,6 +14,11 @@ const decoratorSchema = new mongoose.Schema({
     type: { type: String, enum: ['Point'], default: 'Point' },
     coordinates: { type: [Number], required: true }, // [longitude, latitude]
   },
+  vendorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true, // Link to the vendor's user account
+  },
   bookings: [
     {
       userId: { type: String, required: true },

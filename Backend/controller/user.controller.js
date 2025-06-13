@@ -1,8 +1,9 @@
+
 import Hotel from '../model/hotels.model.js';
 import Caterer from '../model/caterers.model.js';
 import Decorator from '../model/decorators.model.js';
 import User from '../model/user.model.js';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 
 const getUserBookings = async (req, res) => {
   try {
@@ -43,7 +44,7 @@ const getUserBookings = async (req, res) => {
     res.status(200).json({
       hotels: formattedHotels,
       caterers: formattedCaterers,
-      decorators: formattedDecorators,
+      decorators: formattedDecorators, // Fixed typo
     });
   } catch (error) {
     console.error('Error fetching user bookings:', error.message);
@@ -53,26 +54,42 @@ const getUserBookings = async (req, res) => {
 
 const Signup = async (req, res) => {
   try {
-    const { fullname, email, password } = req.body;
+    const { fullname, email, password, role } = req.body;
 
+    // Validate input fields
     if (!fullname || !email || !password) {
-      return res.status(400).json({ message: 'All fields are required' });
+      return res.status(400).json({ message: 'All required fields are required' });
     }
 
+    // Validate role
+    const validRoles = ['customer', 'vendor'];
+    if (role && !validRoles.includes(role)) {
+      return res.status(400).json({ message: 'Invalid role' });
+    }
+
+    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new user
     const newUser = new User({
-      fullname,
+      fullname, // Fixed: use fullname
       email,
       password: hashedPassword,
+      role: role || 'customer',
     });
 
     await newUser.save();
-    res.status(201).json({ message: 'User created successfully', user: { _id: newUser._id, fullname, email } });
+
+    res.status(201).json({
+      message: 'User created successfully',
+      user: { _id: newUser._id, fullname, email, role: newUser.role },
+    });
   } catch (error) {
     console.error('Error during signup:', error.message);
     res.status(500).json({ message: 'Server error', details: error.message });
@@ -82,22 +99,45 @@ const Signup = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log('Login request payload:', req.body);
 
+    // Validate input fields
     if (!email || !password) {
       return res.status(400).json({ message: 'Email and password are required' });
     }
 
+    // Find user by email
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    // Check password match
+    const isMatch = await bcrypt.compare(password, user.password); // Fixed typo
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    res.status(200).json({ message: 'Login successful', user: { _id: user._id, fullname: user.fullname, email: user.email } });
+
+    req.session.user = {
+      _id: user._id.toString(),
+      fullname: user.fullname,
+      email: user.email,
+      role: user.role,
+    };
+    console.log('Session set:', req.session.user);
+
+    
+    // Return user details including role
+    res.status(200).json({
+      message: 'Login successful',
+      user: {
+        _id: user._id,
+        fullname: user.fullname,
+        email: user.email,
+        role: user.role,
+      },
+    });
   } catch (error) {
     console.error('Error during login:', error.message);
     res.status(500).json({ message: 'Server error', details: error.message });

@@ -1,11 +1,9 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const userSchema = mongoose.Schema({
   fullname: {
     type: String,
-    required: function () {
-      return !this.googleId; // Fullname required only for non-Google users
-    },
+    required: true,
   },
   email: {
     type: String,
@@ -14,17 +12,19 @@ const userSchema = mongoose.Schema({
   },
   password: {
     type: String,
-    required: function () {
-      return !this.googleId; // Password required only for non-Google users
-    },
+    required: true,
   },
   googleId: {
     type: String,
     unique: true,
-    sparse: true, // Allows null values for non-Google users
+    sparse: true,
+  },
+  role: {
+    type: String,
+    enum: ['customer', 'vendor'],
+    default: 'customer',
   },
 });
 
-const User = mongoose.model("User", userSchema);
-
+const User = mongoose.model('User', userSchema);
 export default User;

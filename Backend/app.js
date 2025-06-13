@@ -4,6 +4,7 @@ import hotelsroute from './route/hotels.route.js';
 import userroute from './route/user.route.js';
 import caterersroute from './route/caterers.route.js';
 import decoratorsroute from './route/decorators.route.js';
+import chatroute from './route/chat.route.js'; // Add chat routes
 import cors from 'cors';
 import session from 'express-session';
 import passport from './passport.js';
@@ -13,7 +14,6 @@ import crypto from 'crypto';
 import Hotel from './model/hotels.model.js';
 import Caterer from './model/caterers.model.js';
 import Decorator from './model/decorators.model.js';
-// import admin from './firebaseAdmin.js';
 
 const app = express();
 const server = createServer(app);
@@ -37,6 +37,7 @@ app.use(
     secret: process.env.SESSION_SECRET || 'your-session-secret',
     resave: false,
     saveUninitialized: false,
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 },
   })
 );
 app.use(passport.initialize());
@@ -47,6 +48,7 @@ app.use('/hotels', hotelsroute);
 app.use('/user', userroute);
 app.use('/caterers', caterersroute);
 app.use('/decorators', decoratorsroute);
+app.use('/chat', chatroute); // Add chat routes
 
 // Verify Payment Endpoint
 app.post('/verify-payment', async (req, res) => {
@@ -54,7 +56,6 @@ app.post('/verify-payment', async (req, res) => {
     const { paymentId, orderId, signature } = req.body;
     console.log('Verifying payment:', { paymentId, orderId });
 
-    // Verify signature
     const generatedSignature = crypto
       .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
       .update(`${orderId}|${paymentId}`)
@@ -65,7 +66,6 @@ app.post('/verify-payment', async (req, res) => {
       return res.status(400).json({ error: 'Invalid signature' });
     }
 
-    // Find and update booking
     const models = [Hotel, Caterer, Decorator];
     let booking = null;
     let item = null;
@@ -86,31 +86,12 @@ app.post('/verify-payment', async (req, res) => {
       return res.status(404).json({ error: 'Booking not found' });
     }
 
-    // Emit Socket.IO event
     io.to(booking.userId).emit('bookingUpdate', {
       bookingId: booking._id,
       status: booking.status,
       message: `Your booking is confirmed!`,
     });
     console.log('Booking confirmed, emitted to user:', booking.userId);
-
-    // Firebase notification (if enabled)
-    /*
-    if (booking.userId) {
-      const user = await User.findById(booking.userId);
-      if (user && user.fcmToken) {
-        const message = {
-          notification: {
-            title: 'Booking Confirmed',
-            body: 'Your booking has been successfully confirmed!',
-          },
-          token: user.fcmToken,
-        };
-        await admin.messaging().send(message);
-        console.log('Notification sent to user:', booking.userId);
-      }
-    }
-    */
 
     res.status(200).json({ message: 'Payment verified successfully' });
   } catch (error) {
@@ -121,10 +102,19 @@ app.post('/verify-payment', async (req, res) => {
 
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
+
+  // Join user room for booking updates
   socket.on('join', (userId) => {
     socket.join(userId);
     console.log(`User ${userId} joined room`);
   });
+
+  // Join chat room
+  socket.on('joinChat', (chatId) => {
+    socket.join(`chat_${chatId}`);
+    console.log(`User joined chat room: chat_${chatId}`);
+  });
+
   socket.on('disconnect', () => {
     console.log('A user disconnected:', socket.id);
   });

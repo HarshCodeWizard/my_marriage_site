@@ -17,6 +17,13 @@ router.get(
   (req, res) => {
     if (req.user) {
       console.log("Authenticated user:", req.user);
+
+      req.session.user = {
+        _id: req.user._id.toString(),
+        fullname: req.user.fullname,
+        email: req.user.email,
+        role: req.user.role,
+      }; 
       const userData = {
         _id: req.user._id,
         fullname: req.user.fullname,
@@ -32,11 +39,12 @@ router.get(
 );
 
 // Get current user
-router.get("/me", (req, res) => {
-  if (!req.user) {
-    return res.status(401).json({ error: "Unauthorized" });
+router.get('/me', (req, res) => {
+  console.log('Session in /user/me:', req.session);
+  if (!req.session.user) {
+    return res.status(401).json({ error: 'Unauthorized' });
   }
-  res.json({ userId: req.user._id });
+  res.status(200).json(req.session.user);
 });
 
 // Fetch user bookings

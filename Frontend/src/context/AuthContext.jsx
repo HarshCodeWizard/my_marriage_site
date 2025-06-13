@@ -1,68 +1,58 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
 
 const AuthContext = createContext();
 
-export function AuthProvider({ children }) {
-  const [userId, setUserId] = useState(null);
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const location = useLocation();
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem('userId');
-    if (storedUserId) {
-      setUserId(storedUserId);
+    const storedUser = localStorage.getItem("User");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      setUserId(parsedUser._id);
+      console.log('AuthContext loaded user:', parsedUser, 'userId:', parsedUser._id);
     }
 
-    const query = new URLSearchParams(location.search);
-    const userData = query.get('user');
-    if (userData) {
+    const fetchUser = async () => {
       try {
-        const parsedUser = JSON.parse(decodeURIComponent(userData));
-        setUser(parsedUser);
-        setUserId(parsedUser._id);
-        localStorage.setItem('userId', parsedUser._id);
+        const response = await axios.get('http://localhost:8000/user/me', { withCredentials: true });
+        console.log('Fetched user from /user/me:', response.data);
+        setUser(response.data);
+        setUserId(response.data._id);
+        localStorage.setItem("User", JSON.stringify(response.data));
       } catch (error) {
-        console.error("Error parsing user data:", error);
+        console.error('Error fetching user:', error.response?.status, error.response?.data || error.message);
+        setUser(null);
+        setUserId(null);
+        localStorage.removeItem("User");
       }
-    }
+    };
 
-    if (!userData && !storedUserId) {
-      axios.get("http://localhost:8000/user/me", { withCredentials: true })
-        .then(response => {
-          setUserId(response.data.userId);
-          localStorage.setItem('userId', response.data.userId);
-        })
-        .catch(error => {
-          console.error("Error fetching user:", error);
-          setUserId(null);
-          localStorage.removeItem('userId');
-        });
-    }
-  }, [location]);
+    fetchUser();
+  }, []);
+
+  const login = (userData) => {
+    setUser(userData);
+    setUserId(userData._id);
+    localStorage.setItem("User", JSON.stringify(userData));
+    console.log('AuthContext login:', userData, 'userId:', userData._id);
+  };
 
   const logout = () => {
-    axios.get("http://localhost:8000/user/logout", { withCredentials: true })
-      .then(() => {
-        setUserId(null);
-        setUser(null);
-        localStorage.removeItem('userId');
-      })
-      .catch(error => console.error("Error logging out:", error));
+    setUser(null);
+    setUserId(null);
+    localStorage.removeItem("User");
   };
 
   return (
-    <AuthContext.Provider value={{ userId, user, setUserId, logout }}>
+    <AuthContext.Provider value={{ user, userId, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-}
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
 };
+
+export const useAuth = () => useContext(AuthContext);

@@ -6,13 +6,18 @@ const hotelSchema = new mongoose.Schema({
   category: { type: String, required: true },
   image: { type: String, required: true },
   price: { type: Number, required: true },
-  subImages: [{ type: String }], // Array of image URLs
+  subImages: [{ type: String }],
   address: { type: String, required: true },
-  latitude: { type: Number }, // Optional, derived from location.coordinates
-  longitude: { type: Number }, // Optional, derived from location.coordinates
+  latitude: { type: Number },
+  longitude: { type: Number },
   location: {
     type: { type: String, enum: ['Point'], default: 'Point' },
-    coordinates: { type: [Number], required: true }, // [longitude, latitude]
+    coordinates: { type: [Number], required: true },
+  },
+  vendorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: false, // Link to the vendor's user account
   },
   bookings: [
     {
@@ -25,14 +30,12 @@ const hotelSchema = new mongoose.Schema({
   ],
 });
 
-// Create geospatial index for location
 hotelSchema.index({ location: '2dsphere' });
 
-// Pre-save hook to sync latitude/longitude with location.coordinates
 hotelSchema.pre('save', function (next) {
   if (this.location && this.location.coordinates) {
-    this.longitude = this.location.coordinates[0]; // longitude
-    this.latitude = this.location.coordinates[1]; // latitude
+    this.longitude = this.location.coordinates[0];
+    this.latitude = this.location.coordinates[1];
   }
   next();
 });
